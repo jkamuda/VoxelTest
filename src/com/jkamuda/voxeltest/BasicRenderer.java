@@ -11,7 +11,6 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 public class BasicRenderer {
-
     // We need to strongly reference callback instances.
     private GLFWErrorCallback errorCallback;
     private GLFWKeyCallback   keyCallback;
@@ -40,8 +39,9 @@ public class BasicRenderer {
         glfwSetErrorCallback(errorCallback = errorCallbackPrint(System.err));
 
         // Initialize GLFW. Most GLFW functions will not work before doing this.
-        if ( glfwInit() != GL11.GL_TRUE )
+        if (glfwInit() != GL11.GL_TRUE) {
             throw new IllegalStateException("Unable to initialize GLFW");
+        }
 
         // Configure our window
         glfwDefaultWindowHints(); // optional, the current window hints are already the default
@@ -52,27 +52,27 @@ public class BasicRenderer {
         int HEIGHT = 300;
 
         // Create the window
-        window = glfwCreateWindow(WIDTH, HEIGHT, "Hello World!", NULL, NULL);
-        if ( window == NULL )
+        window = glfwCreateWindow(WIDTH, HEIGHT, "Voxel Test", NULL, NULL);
+        if (window == NULL) {
             throw new RuntimeException("Failed to create the GLFW window");
+        }
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, keyCallback = new GLFWKeyCallback() {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods) {
-                if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
+                if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
                     glfwSetWindowShouldClose(window, GL_TRUE); // We will detect this in our rendering loop
+                }
             }
         });
 
         // Get the resolution of the primary monitor
         ByteBuffer vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         // Center our window
-        glfwSetWindowPos(
-                window,
+        glfwSetWindowPos(window,
                 (GLFWvidmode.width(vidmode) - WIDTH) / 2,
-                (GLFWvidmode.height(vidmode) - HEIGHT) / 2
-        );
+                (GLFWvidmode.height(vidmode) - HEIGHT) / 2);
 
         // Make the OpenGL context current
         glfwMakeContextCurrent(window);
@@ -96,7 +96,7 @@ public class BasicRenderer {
 
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
-        while ( glfwWindowShouldClose(window) == GL_FALSE ) {
+        while (glfwWindowShouldClose(window) == GL_FALSE) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
             glfwSwapBuffers(window); // swap the color buffers
@@ -110,5 +110,4 @@ public class BasicRenderer {
     public static void main(String[] args) {
         new BasicRenderer().run();
     }
-
 }
